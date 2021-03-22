@@ -97,22 +97,16 @@
                     <textarea name="notes" formControlName="notes" matInput type="text" max-rows="4"></textarea>
                 </mat-form-field>
             </div>
-            
-            <!-- <div fxLayout="row" fxLayoutAlign="start start">
-                <mat-form-field>
-                    <mat-select placeholder="Fruits" [formControl]="fruits" multiple>
-                      <mat-select-trigger>
-                        {{fruits.value ? fruits.value[0] : ''}}
-                        <span *ngIf="fruits.value?.length > 1" class="example-additional-selection">
-                          (+{{fruits.value.length - 1}} {{fruits.value?.length === 2 ? 'other' : 'others'}})
-                        </span>
-                      </mat-select-trigger>
-                      <mat-option *ngFor="let fruit of fruitList" [value]="fruit">{{fruit}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-            </div> -->
-
         </form>
+
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Fruits</mat-label>
+                <mat-select multiple [formControl]="fruitsForm">
+                    <mat-option *ngFor="let fruit of fruitsList" [value]="fruit">{{ fruit }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
     </div>
 
@@ -130,7 +124,7 @@
         <button *ngIf="action !== 'edit'"
                 mat-button
                 class="save-button"
-                (click)="matDialogRef.close(contactForm)"
+                (click)="matDialogRef.close(contactForm);"
                 [disabled]="contactForm.invalid"
                 aria-label="SAVE">
             ADD
@@ -139,7 +133,7 @@
         <button *ngIf="action === 'edit'"
                 mat-button
                 class="save-button"
-                (click)="matDialogRef.close(['save',contactForm])"
+                (click)="updateFruitList(fruitsForm.value); matDialogRef.close(['save',contactForm])"
                 [disabled]="contactForm.invalid"
                 aria-label="SAVE">
             SAVE
