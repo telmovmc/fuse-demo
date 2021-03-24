@@ -1,5 +1,6 @@
+import { AuthGuardService } from './auth-guard.service';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, CanActivate } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +14,8 @@ import { Login2Component } from 'app/main/pages/authentication/login-2/login-2.c
 const routes = [
     {
         path     : 'auth/login-2',
-        component: Login2Component
+        component: Login2Component,
+        canActivate: [AuthGuardService]
     }
 ];
 
@@ -31,7 +33,8 @@ const routes = [
         MatInputModule,
 
         FuseSharedModule
-    ]
+    ],
+    providers: [AuthGuardService]
 })
 export class Login2Module
 {

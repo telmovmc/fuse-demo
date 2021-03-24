@@ -1,6 +1,8 @@
+import { ContactsService } from 'app/main/apps/contacts/contacts.service';
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CookieService } from 'ngx-cookie-service'
 
 
 import { Contact } from 'app/main/apps/contacts/contact.model';
@@ -18,8 +20,8 @@ export class ContactsContactFormDialogComponent
     contact: Contact;
     contactForm: FormGroup;
     dialogTitle: string;
-    // fruits = new FormControl();
-    // fruitsList: string[] = ['Apple', 'Orange', 'Lemon', 'Banana'];
+    fruitsForm = new FormControl();
+    fruitsList: string[];
 
     /**
      * Constructor
@@ -31,7 +33,9 @@ export class ContactsContactFormDialogComponent
     constructor(
         public matDialogRef: MatDialogRef<ContactsContactFormDialogComponent>,
         @Inject(MAT_DIALOG_DATA) private _data: any,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private _cookieService: CookieService,
+        private contactsService: ContactsService,
     )
     {
         // Set the defaults
@@ -49,6 +53,14 @@ export class ContactsContactFormDialogComponent
         }
 
         this.contactForm = this.createContactForm();
+
+        console.log(this._cookieService.get('Fruits_' + this.contact.id))
+        if(this._cookieService.get('Fruits_' + this.contact.id))
+            this.fruitsForm.setValue(JSON.parse(this._cookieService.get('Fruits_' + this.contact.id)));
+
+        this.contactsService.getFruitsList()
+            .subscribe((fruitList) => this.fruitsList = fruitList)
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -74,7 +86,13 @@ export class ContactsContactFormDialogComponent
             phone   : [this.contact.phone],
             address : [this.contact.address],
             birthday: [this.contact.birthday],
-            notes   : [this.contact.notes]
+            notes   : [this.contact.notes],
         });
+    }
+
+    public updateFruitList(fruits: string[]): void {
+        this.fruitsForm.setValue(fruits);
+        this._cookieService.set('Fruits_' + this.contact.id, JSON.stringify(fruits), 365, '/');
+
     }
 }
