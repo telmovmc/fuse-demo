@@ -20,6 +20,8 @@ import { IconsFakeDb } from 'app/fake-db/icons';
 import { ChatPanelFakeDb } from 'app/fake-db/chat-panel';
 import { QuickPanelFakeDb } from 'app/fake-db/quick-panel';
 import { UsersFakeDB } from './users';
+import { FruitsFakeDB } from './fruits';
+
 
 export class FakeDbService implements InMemoryDbService
 {
@@ -100,6 +102,9 @@ export class FakeDbService implements InMemoryDbService
 
             // Users
             'users': UsersFakeDB.data,
+
+            // Fruits
+            'fruits': FruitsFakeDB.data,
         };
     }
 }

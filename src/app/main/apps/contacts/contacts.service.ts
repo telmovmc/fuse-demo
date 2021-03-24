@@ -22,6 +22,8 @@ export class ContactsService implements Resolve<any>
 
     searchText: string;
     filterBy: string;
+    
+    baseUrl: string = 'api/fruits';
 
     /**
      * Constructor
@@ -285,4 +287,11 @@ export class ContactsService implements Resolve<any>
         this.deselectContacts();
     }
 
+
+    /**
+     * Get Items of Fruits
+     */
+    getFruitsList(): Observable<string[]> {
+        return this._httpClient.get<string[]>(`${this.baseUrl}`)
+    }
 }
