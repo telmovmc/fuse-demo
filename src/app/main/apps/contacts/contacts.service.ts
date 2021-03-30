@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { FuseUtils } from '@fuse/utils';
 
 import { Contact } from 'app/main/apps/contacts/contact.model';
+import { Skill } from 'app/models/Skill';
 
 @Injectable()
 export class ContactsService implements Resolve<any>
@@ -96,6 +97,7 @@ export class ContactsService implements Resolve<any>
                     .subscribe((response: any) => {
 
                         this.contacts = response;
+                        // console.log(this.contacts)
 
                         if ( this.filterBy === 'starred' )
                         {
@@ -124,10 +126,10 @@ export class ContactsService implements Resolve<any>
                         resolve(this.contacts);
                     }, reject);
 
-                this._httpClient.get(`${this.baseUrlApi}/users`)
-                .subscribe((response: any) => {
-                    console.log("Resposta: ", response);
-                });
+                // this._httpClient.get(`${this.baseUrlApi}/users`)
+                // .subscribe((response: any) => {
+                //     console.log("Resposta: ", response);
+                // });
             }
         );
     }
@@ -228,6 +230,8 @@ export class ContactsService implements Resolve<any>
     updateContact(contact): Promise<any>
     {
         return new Promise((resolve, reject) => {
+            
+            // console.log(contact);
 
             this._httpClient.post('api/contacts-contacts/' + contact.id, {...contact})
                 .subscribe(response => {
@@ -301,5 +305,16 @@ export class ContactsService implements Resolve<any>
      */
     getFruitsList(): Observable<string[]> {
         return this._httpClient.get<string[]>(`${this.baseUrlFakeDbFruits}`)
+    }
+
+    /**
+     * Get All Skills
+     */
+    getAllSkills(): Observable<Skill[]> {
+        return this._httpClient.get<Skill[]>("api/skills")
+    }
+
+    addSkill(skill): Observable<Skill> {
+        return this._httpClient.post<Skill>("api/skills", skill);
     }
 }

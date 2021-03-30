@@ -19,10 +19,11 @@
 
                     <div class="nav-item" aria-label="inbox" >
                         
-                        <span class="text-info">{{ message }}</span>
+                        <span class="text-info">{{ messageInfo }}</span>
 
                         <mat-form-field class="example-form-field nav-input">
-                            <input matInput placeholder="Add New Skill" [formControl]="skillForm">
+                            <input matInput #message maxlength="30" placeholder="Add New Skill" [formControl]="skillForm">
+                            <mat-hint align="end">{{message.value.length}} / 30</mat-hint>
                         </mat-form-field>
                         
                         <button mat-flat-button color="accent" (click)="addNewSkill(skillForm.value);" class="nav-input-button">Add</button>

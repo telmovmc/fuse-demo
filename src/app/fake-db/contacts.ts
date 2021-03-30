@@ -13,7 +13,19 @@ export class ContactsFakeDb
             'phone'   : '+1-202-555-0175',
             'address' : '933 8th Street Stamford, CT 06902',
             'birthday': '',
-            'notes'   : ''
+            'notes'   : '',
+            'skills'  : [{
+                'id': 1, 
+                'title': 'Swimming', 
+                'description': 'Float in water',
+                "users": []
+            },
+            {
+                'id': 2, 
+                'title': 'Running', 
+                'description': 'Walk way faster',
+                "users": [],
+            }], 
         },
         {
             'id'      : '5725a680606588342058356d',

@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service'
 
 
+import { Skill } from './../../../../models/Skill';
 import { Contact } from 'app/main/apps/contacts/contact.model';
 
 @Component({
@@ -24,7 +25,7 @@ export class ContactsContactFormDialogComponent
     selectedSkills: string[];
     fruitsForm = new FormControl();
 
-    skillsList: string[];
+    skillsList: Skill[];
     fruitsList: string[];
 
     /**
@@ -56,15 +57,22 @@ export class ContactsContactFormDialogComponent
             this.contact = new Contact({});
         }
 
+        this.skillsList = [];
         this.contactForm = this.createContactForm();
 
-        this.skillsList = ["Swimming", "Running", "Jumping"];
+        this.contactsService.getAllSkills()
+            .subscribe((skills) => {
+                skills.map(skill => {
+                    console.log(skill)
+                    this.skillsList.push(skill)
+                })
+            })
 
         //
         // Cookies
         //
 
-        console.log(this._cookieService.get('Fruits_' + this.contact.id))
+        // // console.log(this._cookieService.get('Fruits_' + this.contact.id))
         if(this._cookieService.get('Fruits_' + this.contact.id))
             this.fruitsForm.setValue(JSON.parse(this._cookieService.get('Fruits_' + this.contact.id)));
 
@@ -97,7 +105,7 @@ export class ContactsContactFormDialogComponent
             address : [this.contact.address],
             birthday: [this.contact.birthday],
             notes   : [this.contact.notes],
-            skills  : [this.selectedSkills],
+            skills  : [this.contact.skills],
         });
     }
 

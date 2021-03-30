@@ -1,4 +1,5 @@
 import { FuseUtils } from '@fuse/utils';
+import { Skill } from 'app/models/Skill';
 
 export class Contact
 {
@@ -14,6 +15,7 @@ export class Contact
     address: string;
     birthday: string;
     notes: string;
+    skills: Skill[];
 
     /**
      * Constructor
@@ -35,6 +37,7 @@ export class Contact
             this.address = contact.address || '';
             this.birthday = contact.birthday || '';
             this.notes = contact.notes || '';
+            this.skills = contact.skills || [];
         }
     }
 }

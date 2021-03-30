@@ -21,6 +21,7 @@ import { ChatPanelFakeDb } from 'app/fake-db/chat-panel';
 import { QuickPanelFakeDb } from 'app/fake-db/quick-panel';
 import { UsersFakeDB } from './users';
 import { FruitsFakeDB } from './fruits';
+import { SkillsFakeDB } from './skills';
 
 
 export class FakeDbService implements InMemoryDbService
@@ -105,6 +106,9 @@ export class FakeDbService implements InMemoryDbService
 
             // Fruits
             'fruits': FruitsFakeDB.data,
+
+            // Skills
+            'skills': SkillsFakeDB.data,
         };
     }
 }
