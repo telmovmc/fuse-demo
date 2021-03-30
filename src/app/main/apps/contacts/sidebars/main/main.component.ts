@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 import { ContactsService } from 'app/main/apps/contacts/contacts.service';
 
@@ -13,6 +14,9 @@ export class ContactsMainSidebarComponent implements OnInit, OnDestroy
 {
     user: any;
     filterBy: string;
+
+    skillForm = new FormControl();
+    message: string;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -72,4 +76,12 @@ export class ContactsMainSidebarComponent implements OnInit, OnDestroy
         this.filterBy = filter;
         this._contactsService.onFilterChanged.next(this.filterBy);
     }
+
+    addNewSkill(skill): void 
+    {
+        if(!skill || skill.trim() == '') return;
+        this.message = skill.trim() + " added succesfully!";
+        this.skillForm = new FormControl();
+    }
+
 }

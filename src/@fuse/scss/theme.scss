@@ -7,7 +7,6 @@
 @import "src/@fuse/components/widget/widget.theme";
 
 @mixin fuse-core-theme($theme) {
-
     // Theming for Fuse core styles
     @include colors-theme($theme);
     @include cards-theme($theme);
@@ -28,3 +27,9 @@
     @include ngx-datatable-theme($theme);
 }
 
+.text-info {
+    color: red;
+    font-size: x-small;
+    margin-left: 24px;
+    margin-bottom: 10px;
+}

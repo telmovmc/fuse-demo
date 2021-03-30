@@ -23,7 +23,10 @@ export class ContactsService implements Resolve<any>
     searchText: string;
     filterBy: string;
     
-    baseUrl: string = 'api/fruits';
+    baseUrlFakeDbFruits: string = 'api/fruits';
+
+    baseUrlApi: string = 'http://localhost:8080/apiSpringBoot';
+
 
     /**
      * Constructor
@@ -73,7 +76,7 @@ export class ContactsService implements Resolve<any>
                         this.getContacts();
                     });
 
-                    resolve();
+                    resolve(null);
 
                 },
                 reject
@@ -120,6 +123,11 @@ export class ContactsService implements Resolve<any>
                         this.onContactsChanged.next(this.contacts);
                         resolve(this.contacts);
                     }, reject);
+
+                this._httpClient.get(`${this.baseUrlApi}/users`)
+                .subscribe((response: any) => {
+                    console.log("Resposta: ", response);
+                });
             }
         );
     }
@@ -292,6 +300,6 @@ export class ContactsService implements Resolve<any>
      * Get Items of Fruits
      */
     getFruitsList(): Observable<string[]> {
-        return this._httpClient.get<string[]>(`${this.baseUrl}`)
+        return this._httpClient.get<string[]>(`${this.baseUrlFakeDbFruits}`)
     }
 }

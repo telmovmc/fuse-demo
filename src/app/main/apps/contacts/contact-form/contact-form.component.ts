@@ -20,7 +20,11 @@ export class ContactsContactFormDialogComponent
     contact: Contact;
     contactForm: FormGroup;
     dialogTitle: string;
+
+    selectedSkills: string[];
     fruitsForm = new FormControl();
+
+    skillsList: string[];
     fruitsList: string[];
 
     /**
@@ -53,6 +57,12 @@ export class ContactsContactFormDialogComponent
         }
 
         this.contactForm = this.createContactForm();
+
+        this.skillsList = ["Swimming", "Running", "Jumping"];
+
+        //
+        // Cookies
+        //
 
         console.log(this._cookieService.get('Fruits_' + this.contact.id))
         if(this._cookieService.get('Fruits_' + this.contact.id))
@@ -87,6 +97,7 @@ export class ContactsContactFormDialogComponent
             address : [this.contact.address],
             birthday: [this.contact.birthday],
             notes   : [this.contact.notes],
+            // skills  : [this.selectedSkills],
         });
     }
 
