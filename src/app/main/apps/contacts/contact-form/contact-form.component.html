@@ -98,14 +98,14 @@
                 </mat-form-field>
             </div>
             
-            <!-- <div fxLayout="row" class="textarea-wrapper" fxLayoutAlign="start start">
+            <div fxLayout="row" class="textarea-wrapper" fxLayoutAlign="start start">
                 <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Notes</mat-label>
+                    <mat-label>Skills</mat-label>
                     <mat-select multiple formControlName="skills">
                         <mat-option *ngFor="let skill of skillsList" [value]="skill">{{ skill }}</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div> -->
+            </div>
         </form>
 
         <div fxLayout="row" fxLayoutAlign="start start">
@@ -142,7 +142,7 @@
         <button *ngIf="action === 'edit'"
                 mat-button
                 class="save-button"
-                (click)="updateFruitList(fruitsForm.value); console.log(contactForm); matDialogRef.close(['save',contactForm])"
+                (click)="updateFruitList(fruitsForm.value); show(contactForm.controls.skills.value); matDialogRef.close(['save',contactForm])"
                 [disabled]="contactForm.invalid"
                 aria-label="SAVE">
             SAVE

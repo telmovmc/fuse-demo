@@ -97,7 +97,7 @@ export class ContactsContactFormDialogComponent
             address : [this.contact.address],
             birthday: [this.contact.birthday],
             notes   : [this.contact.notes],
-            // skills  : [this.selectedSkills],
+            skills  : [this.selectedSkills],
         });
     }
 
@@ -105,5 +105,10 @@ export class ContactsContactFormDialogComponent
         this.fruitsForm.setValue(fruits);
         this._cookieService.set('Fruits_' + this.contact.id, JSON.stringify(fruits), 365, '/');
 
+    }
+
+    show(response: any): void 
+    {
+        console.log(response);
     }
 }
