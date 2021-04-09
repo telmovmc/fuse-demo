@@ -83,17 +83,16 @@ export class ContactsMainSidebarComponent implements OnInit, OnDestroy
     {
         if(!skill || skill.trim() == '') return;
         
-        this._contactsService.getAllSkills()
-        .subscribe((skills) => {
-            this.skillCreated = new Skill(skills.length + 1, skill.trim(), "");
-            this._contactsService.addSkill(this.skillCreated).subscribe(() => {
+
+            this._contactsService.addSkill(new Skill(skill, "")).subscribe(() => {
                     this.messageInfo = skill.trim() + " added succesfully!";
+                    console.log(this.messageInfo)
+
                 }
             );
 
-        })
-
         this.skillForm = new FormControl();
+        this._contactsService.getContacts();
     }
 
 }

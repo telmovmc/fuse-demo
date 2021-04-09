@@ -3,7 +3,7 @@ import { Skill } from 'app/models/Skill';
 
 export class Contact
 {
-    id: string;
+    id: number;
     name: string;
     lastName: string;
     avatar: string;
@@ -25,7 +25,7 @@ export class Contact
     constructor(contact)
     {
         {
-            this.id = contact.id || FuseUtils.generateGUID();
+            this.id = contact.id || 0;
             this.name = contact.name || '';
             this.lastName = contact.lastName || '';
             this.avatar = contact.avatar || 'assets/images/avatars/profile.jpg';

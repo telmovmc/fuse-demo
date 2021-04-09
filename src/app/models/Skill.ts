@@ -7,8 +7,8 @@ export class Skill {
     description: string;
     users: Contact[];
 
-    constructor(id, skill, description) {
-        this.id = id;
+    constructor(skill, description) {
+
         this.title = skill || '';
         this.description = description || '';
         this.users = [];

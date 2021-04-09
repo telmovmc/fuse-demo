@@ -101,8 +101,8 @@
             <div fxLayout="row" fxLayoutAlign="start start">
                 <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Skills</mat-label>
-                    <mat-select multiple formControlName="skills">
-                        <mat-option *ngFor="let skill of skillsList" [value]="skill">{{ skill.title }}</mat-option>
+                    <mat-select multiple formControlName="skills" [(value)]="selectedSkill">
+                        <mat-option *ngFor="let skill of skillsList" [value]="skill">{{ skill }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -142,7 +142,7 @@
         <button *ngIf="action === 'edit'"
                 mat-button
                 class="save-button"
-                (click)="updateFruitList(fruitsForm.value); show(contactForm); matDialogRef.close(['save',contactForm])"
+                (click)="updateFruitList(fruitsForm.value); save(contactForm)"
                 [disabled]="contactForm.invalid"
                 aria-label="SAVE">
             SAVE
