@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service'
 
 
+// import { Skill } from './../../../../models/Skill';
 import { Contact } from 'app/main/apps/contacts/contact.model';
 
 @Component({
@@ -20,7 +21,11 @@ export class ContactsContactFormDialogComponent
     contact: Contact;
     contactForm: FormGroup;
     dialogTitle: string;
+
+    selectedSkills: string[];
     fruitsForm = new FormControl();
+
+    skillsList: string[];
     fruitsList: string[];
 
     /**
@@ -40,7 +45,7 @@ export class ContactsContactFormDialogComponent
     {
         // Set the defaults
         this.action = _data.action;
-
+        
         if ( this.action === 'edit' )
         {
             this.dialogTitle = 'Edit Contact';
@@ -52,9 +57,30 @@ export class ContactsContactFormDialogComponent
             this.contact = new Contact({});
         }
 
+        // console.log(this.contact)
+        this.skillsList = [];
         this.contactForm = this.createContactForm();
+        
 
-        console.log(this._cookieService.get('Fruits_' + this.contact.id))
+        // Transform Skill into String
+        this.contactForm.value.skills.map((skill, index) => {
+            this.contactForm.value.skills[index] = skill.title
+        })
+
+
+        // Set Skill List as string[]
+        this.contactsService.getAllSkills()
+            .then(skills => {
+                skills.map(skill => {
+                    this.skillsList.push(skill.title);
+                })
+            })
+
+        //
+        // Cookies
+        //
+
+        // // console.log(this._cookieService.get('Fruits_' + this.contact.id))
         if(this._cookieService.get('Fruits_' + this.contact.id))
             this.fruitsForm.setValue(JSON.parse(this._cookieService.get('Fruits_' + this.contact.id)));
 
@@ -87,7 +113,23 @@ export class ContactsContactFormDialogComponent
             address : [this.contact.address],
             birthday: [this.contact.birthday],
             notes   : [this.contact.notes],
+            skills  : [this.contact.skills],
         });
+    }
+
+    public async save(contactForm) {
+        
+        await Promise.all(this.contactForm.value.skills.map((skillName, index) => {
+                // console.log(skillName, " - ", index);
+                this.contactsService.getSkillByName(skillName).then((resolve) => {
+                    this.contactForm.value.skills[index] = resolve;
+                    }
+                );
+        }))
+        
+        // console.log("Skills saved: ", contactForm.value.skills);
+
+        this.matDialogRef.close(['save',contactForm])
     }
 
     public updateFruitList(fruits: string[]): void {

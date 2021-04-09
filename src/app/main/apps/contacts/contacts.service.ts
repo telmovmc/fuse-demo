@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot, ResolveEnd } from '@angular/router';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { FuseUtils } from '@fuse/utils';
 
+import { environment } from 'environments/environment'
 import { Contact } from 'app/main/apps/contacts/contact.model';
+import { Skill } from 'app/models/Skill';
 
 @Injectable()
 export class ContactsService implements Resolve<any>
@@ -18,12 +20,14 @@ export class ContactsService implements Resolve<any>
 
     contacts: Contact[];
     user: any;
-    selectedContacts: string[] = [];
+    selectedContacts: number[] = [];
 
     searchText: string;
     filterBy: string;
-    
-    baseUrl: string = 'api/fruits';
+
+    baseUrlFakeDbFruits: string = 'api/fruits';
+
+    skillReturn: Skill;
 
     /**
      * Constructor
@@ -73,7 +77,7 @@ export class ContactsService implements Resolve<any>
                         this.getContacts();
                     });
 
-                    resolve();
+                    resolve(null);
 
                 },
                 reject
@@ -89,10 +93,11 @@ export class ContactsService implements Resolve<any>
     getContacts(): Promise<any>
     {
         return new Promise((resolve, reject) => {
-                this._httpClient.get('api/contacts-contacts')
+                this._httpClient.get(`${environment.backendUrl}/getUsers`)
                     .subscribe((response: any) => {
 
                         this.contacts = response;
+                        // console.log(this.contacts)
 
                         if ( this.filterBy === 'starred' )
                         {
@@ -219,15 +224,46 @@ export class ContactsService implements Resolve<any>
      */
     updateContact(contact): Promise<any>
     {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
 
-            this._httpClient.post('api/contacts-contacts/' + contact.id, {...contact})
+             console.log(contact)
+
+            await Promise.all(contact.skills.map(async (skill, index) => {
+                // console.log(contact.skills[index])
+                
+                if(typeof(contact.skills[index]) == "string"){
+                    await this.getSkillByName(contact.skills[index]).then((resolve) => {
+                        contact.skills[index] = resolve;
+                    })
+                }
+
+                if(typeof(contact.skills[index]) == "number"){
+                    await this.getSkillById(contact.skills[index]).then((resolve) => {
+                        contact.skills[index] = resolve;
+                    })
+                }
+
+                if(contact.skills[index].users) contact.skills[index].users = null;     
+            }))
+
+            // console.log(JSON.stringify(contact.skills, undefined, 2));
+
+            if(contact.id == 0) {
+                this._httpClient.post(`${environment.backendUrl}/postUser`, contact)
+                    .subscribe(response => {
+                        this.getContacts();
+                        resolve(response);
+                    });
+            } else {   
+                this._httpClient.put(`${environment.backendUrl}/putUser/${contact.id}`, contact)
                 .subscribe(response => {
                     this.getContacts();
                     resolve(response);
                 });
+            }
         });
     }
+
 
     /**
      * Update user data
@@ -263,11 +299,19 @@ export class ContactsService implements Resolve<any>
      *
      * @param contact
      */
-    deleteContact(contact): void
+    async deleteContact(contact): Promise<void>
     {
-        const contactIndex = this.contacts.indexOf(contact);
-        this.contacts.splice(contactIndex, 1);
-        this.onContactsChanged.next(this.contacts);
+        return new Promise((resolve) => {
+
+            const contactIndex = this.contacts.indexOf(contact);
+            this.contacts.splice(contactIndex, 1);
+            this.onContactsChanged.next(this.contacts);
+            this._httpClient.delete(`${environment.backendUrl}/deleteUser/${contact.id}`)
+            .subscribe(response => {
+                this.getContacts();
+                resolve();
+            });
+        })
     }
 
     /**
@@ -292,6 +336,51 @@ export class ContactsService implements Resolve<any>
      * Get Items of Fruits
      */
     getFruitsList(): Observable<string[]> {
-        return this._httpClient.get<string[]>(`${this.baseUrl}`)
+        return this._httpClient.get<string[]>(`${this.baseUrlFakeDbFruits}`)
+    }
+
+    /**
+     * Get All Skills
+     */
+    getAllSkills(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this._httpClient.get<Skill[]>(`${environment.backendUrl}/getAllSkills`)
+                .subscribe(async (skills) => {
+                    await Promise.all(skills.map(async (skill, index) => {
+                        if(typeof(skill) == "number") {
+                            await this.getSkillById(skill).then(skillReceived => {
+                                skills[index] = skillReceived;
+                            })
+                        }
+                    }))
+                    resolve(skills)
+                })
+        })
+    }
+
+    getSkillById(id: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this._httpClient.get<Skill>(`${environment.backendUrl}/getSkill/${id}`)
+                .subscribe(skill => {
+                    resolve(skill);
+                })
+        })
+    }
+
+    getSkillByName(name: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.getAllSkills().then((skills) => {
+                skills.map(skill => {
+                    if(skill.title == name) resolve(skill);
+                })
+            })
+        })
+    }
+
+    addSkill(skill): Observable<Skill> {
+
+        // console.log("Skill: ", skill)
+        return this._httpClient.post<Skill>(`${environment.backendUrl}/postSkill`, skill);
+        
     }
 }

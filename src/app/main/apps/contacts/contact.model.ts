@@ -1,8 +1,9 @@
 import { FuseUtils } from '@fuse/utils';
+import { Skill } from 'app/models/Skill';
 
 export class Contact
 {
-    id: string;
+    id: number;
     name: string;
     lastName: string;
     avatar: string;
@@ -14,6 +15,7 @@ export class Contact
     address: string;
     birthday: string;
     notes: string;
+    skills: Skill[];
 
     /**
      * Constructor
@@ -23,7 +25,7 @@ export class Contact
     constructor(contact)
     {
         {
-            this.id = contact.id || FuseUtils.generateGUID();
+            this.id = contact.id || 0;
             this.name = contact.name || '';
             this.lastName = contact.lastName || '';
             this.avatar = contact.avatar || 'assets/images/avatars/profile.jpg';
@@ -35,6 +37,7 @@ export class Contact
             this.address = contact.address || '';
             this.birthday = contact.birthday || '';
             this.notes = contact.notes || '';
+            this.skills = contact.skills || [];
         }
     }
 }

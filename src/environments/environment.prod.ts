@@ -1,4 +1,5 @@
 export const environment = {
     production: true,
-    hmr       : false
+    hmr       : false,
+    backendUrl: "http://localhost:8080/apiSpringBoot"
 };
